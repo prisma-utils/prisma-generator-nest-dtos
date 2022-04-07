@@ -1,1 +1,1 @@
-export const GENERATOR_NAME = 'prisma-generator-nest-dtos'
+export const GENERATOR_NAME = 'prisma-generator-nest-dtos';
