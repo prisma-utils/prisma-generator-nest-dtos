@@ -1,6 +1,6 @@
 {
-  "name": "prisma-generator-nest-dtos",
-  "description": "Provide a description about your generator",
+  "name": "@prisma-utils/prisma-generator-nest-dtos",
+  "description": "Automagically create CreateDTOs and UpdateDTOs based on the Prisma Schema",
   "version": "1.0.0",
   "main": "dist/generator.js",
   "license": "MIT",
@@ -35,12 +35,15 @@
     "@semantic-release/git": "^10.0.1",
     "semantic-release": "^18.0.1"
   },
-  "homepage": "Link to homepage or github readme here",
+  "homepage": "https://github.com/prisma-utils/prisma-generator-nest-dtos",
   "repository": {
     "type": "git",
-    "url": "Repo link here"
+    "url": "https://github.com/prisma-utils/prisma-generator-nest-dtos"
   },
-  "author": "Your Name <Your Email>",
+  "author": {
+    "name": "Johannes Schobel",
+    "url": "https://github.com/johannesschobel"
+  },
   "keywords": [
     "prisma",
     "prisma2",

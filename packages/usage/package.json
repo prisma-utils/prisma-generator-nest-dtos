@@ -9,9 +9,9 @@
     "@prisma/client": "3.7.0"
   },
   "devDependencies": {
+    "@prisma-utils/prisma-generator-nest-dtos": "1.0.0",
     "@types/node": "16.11.7",
     "prisma": "3.7.0",
-    "prisma-generator-nest-dtos": "1.0.0",
     "typescript": "4.5.2"
   }
 }
