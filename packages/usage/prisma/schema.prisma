@@ -1,6 +1,13 @@
-generator custom_generator {
-  provider = "node ../../node_modules/prisma-generator-nest-dtos"
-  output   = "../types"
+generator nestDTOs {
+  provider = "node ../../node_modules/@prisma-utils/prisma-generator-nest-dtos"
+  output   = "./../#{MODEL}"
+
+  dryRun = true
+  useStrict = true
+
+  DTOPath = "data/dtos"
+  DTOSuffix = "Dto"
+  DTOParentClass = "CoreDto"
 }
 
 datasource db {
@@ -11,24 +18,8 @@ datasource db {
 model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
-  name  String?
+  name  String? @default("hallo")
+  foo Json @default("{}")
+  test String[]
 }
 
-enum NotificationType {
-  newPosts
-  newComments
-  newFollowers
-  reply
-  heartOnPost
-  heartOnComment
-  heartOnReply
-}
-
-enum Language {
-  Typescript
-  Javascript
-  Rust
-  Go
-  Python
-  Cpp
-}
