@@ -7,6 +7,8 @@ import {
   dtoFieldStubWithDefault,
 } from '../stubs/dto.stub';
 import { PrismaHelper } from './../helper/prisma.helper';
+import path from 'path';
+import { writeFileSafely } from './../utils/writeFileSafely';
 
 export class DtoGenerator {
   private fieldDecorators: DecoratorHelper[] = [];
@@ -45,6 +47,16 @@ export class DtoGenerator {
     return content;
   }
 
+  public async writeToFile(outputBasePath: string, content: string) {
+    const dtoFilePath = path.join(
+      outputBasePath,
+      this.config.DTOPath,
+      `${this.config.DTOPrefixCreate.toLowerCase()}-${this.model.name.toLowerCase()}.${this.config.DTOSuffix.toLowerCase()}.ts`,
+    );
+
+    await writeFileSafely(this.config, dtoFilePath, content);
+  }
+
   async generateFieldContent(field: DMMF.Field) {
     let content = dtoFieldStub;
 
@@ -71,7 +83,7 @@ export class DtoGenerator {
       content = content.replace(/#{OP}/g, '?');
     }
 
-    if (this.config.useStrict) {
+    if (this.config.useStrict === 'true') {
       content = content.replace(/#{OP}/g, '!');
     } else {
       content = content.replace(/#{OP}/g, '');

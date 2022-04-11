@@ -2,7 +2,7 @@ generator nestDTOs {
   provider = "node ../../node_modules/@prisma-utils/prisma-generator-nest-dtos"
   output   = "./../#{MODEL}"
 
-  dryRun = true
+  dryRun =  true
   useStrict = true
 
   DTOPath = "data/dtos"

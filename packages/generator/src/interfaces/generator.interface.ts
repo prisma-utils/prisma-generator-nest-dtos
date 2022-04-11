@@ -1,10 +1,14 @@
 export interface GeneratorInterface {
-  useStrict: boolean;
-  dryRun: boolean;
+  useStrict: 'true' | 'false';
+  dryRun: 'true' | 'false';
 
   DTOPath: string;
   DTOPrefixCreate: string;
   DTOPrefixUpdate: string;
   DTOSuffix: string;
-  DTOParentClass: string;
+  DTOParentClass?: string;
+
+  CRUDServicePath: string;
+  CRUDServiceSuffix: string;
+  CRUDStubFile?: string;
 }

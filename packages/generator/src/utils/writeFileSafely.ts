@@ -8,16 +8,15 @@ export const writeFileSafely = async (
   filePath: string,
   content: any,
 ) => {
-  fs.mkdirSync(path.dirname(filePath), {
-    recursive: true,
-  });
-
   const formattedContent = content;
   // const formattedContent = await formatFile(content);
 
-  if (config.dryRun) {
+  if (config.dryRun === 'true') {
     console.log(formattedContent);
   } else {
+    fs.mkdirSync(path.dirname(filePath), {
+      recursive: true,
+    });
     fs.writeFileSync(filePath, formattedContent);
   }
 };
