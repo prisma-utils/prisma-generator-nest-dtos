@@ -2,6 +2,8 @@ export interface GeneratorInterface {
   useStrict: 'true' | 'false';
   dryRun: 'true' | 'false';
 
+  schemaPath: string;
+
   DTOPath: string;
   DTOPrefixCreate: string;
   DTOPrefixUpdate: string;

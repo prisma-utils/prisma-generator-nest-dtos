@@ -4,6 +4,7 @@ import { logger } from '@prisma/sdk';
 import { crudServiceStub } from './../stubs/crud.service.stub';
 import path from 'path';
 import { writeFileSafely } from './../utils/writeFileSafely';
+import { promises as fs } from 'fs';
 
 export class CrudServiceGenerator {
   constructor(
@@ -15,18 +16,18 @@ export class CrudServiceGenerator {
   public async generateContent() {
     let crudServiceContent: string;
 
-    /* if (this.config.CRUDStubFile) {
-      logger.info(`Loading Stubs from ${this.config.CRUDStubFile}`);
-      const customStub = await fs.readFile(
-        path.join(options.schemaPath, stubFile),
-        { encoding: 'utf-8' },
-      );
-      crudServiceStubContent = customStub.toString();
-    } else {
-      crudServiceStubContent = defaultCrudServiceStub;
-    } */
-
     crudServiceContent = crudServiceStub;
+
+    if (this.config.CRUDStubFile) {
+      const stubFullPath = path.join(
+        this.config.schemaPath,
+        this.config.CRUDStubFile,
+      );
+      logger.info(`Loading Stubs from ${stubFullPath}`);
+
+      const customStub = await fs.readFile(stubFullPath, { encoding: 'utf-8' });
+      crudServiceContent = customStub.toString();
+    }
 
     crudServiceContent = crudServiceContent.replace(/#{NAME}/g, this.className);
 

@@ -13,6 +13,8 @@ const defaultOptions: GeneratorInterface = {
   useStrict: 'true',
   dryRun: 'false',
 
+  schemaPath: '',
+
   DTOPath: 'data/dtos',
   DTOPrefixCreate: 'Create',
   DTOPrefixUpdate: 'Update',
@@ -34,9 +36,14 @@ generatorHandler({
     };
   },
   onGenerate: async (options: GeneratorOptions) => {
+    const configOverwrites = {
+      schemaPath: options.schemaPath,
+    };
+
     const config: GeneratorInterface = {
       ...defaultOptions,
       ...options.generator.config,
+      ...configOverwrites,
     };
 
     for (const model of options.dmmf.datamodel.models) {
