@@ -9,6 +9,7 @@ export interface GeneratorInterface {
   DTOPrefixUpdate: string;
   DTOSuffix: string;
   DTOParentClass?: string;
+  DTOValidatorPackage: string;
 
   CRUDServicePath: string;
   CRUDServiceSuffix: string;

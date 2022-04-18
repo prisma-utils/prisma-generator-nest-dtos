@@ -20,6 +20,7 @@ const defaultOptions: GeneratorInterface = {
   DTOPrefixUpdate: 'Update',
   DTOSuffix: 'Dto',
   DTOParentClass: undefined,
+  DTOValidatorPackage: '@nestjs/class-validator',
 
   CRUDServicePath: 'services',
   CRUDServiceSuffix: 'CrudService',
