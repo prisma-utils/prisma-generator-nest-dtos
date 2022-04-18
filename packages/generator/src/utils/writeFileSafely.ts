@@ -8,8 +8,7 @@ export const writeFileSafely = async (
   filePath: string,
   content: any,
 ) => {
-  const formattedContent = content;
-  // const formattedContent = await formatFile(content);
+  const formattedContent = await formatFile(content);
 
   if (config.dryRun === 'true') {
     console.log(formattedContent);
