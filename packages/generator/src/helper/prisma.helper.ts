@@ -40,9 +40,13 @@ export class PrismaHelper {
       decorators.push(new DecoratorHelper('ApiProperty', '@nestjs/swagger'));
     } else {
       decorators.push(
-        new DecoratorHelper('ApiProperty', '@nestjs/swagger', {
-          required: false,
-        }),
+        new DecoratorHelper(
+          'ApiProperty',
+          '@nestjs/swagger',
+          JSON.stringify({
+            required: false,
+          }),
+        ),
       );
     }
 
