@@ -102,9 +102,72 @@ export class DtoGenerator {
         return decorator.generateContent();
       })
       .join(' ');
-    content = content.replace(/#{DECORATORS}/g, fieldDecoratorsContent);
+
+    // and now we add some custom decorators based on documentation
+    let documentation = field.documentation;
+    let customDecoratorsContent: string = '';
+    if (documentation) {
+      // we need to process this properly
+      const customDecorators = this.parseDocumentation(field);
+
+      // this field has to be omitted
+      for (const customDecorator of customDecorators) {
+        // check, if this element is "Transient", so we skip everything
+        if (customDecorator.name === 'Transient') {
+          return '';
+        }
+      }
+
+      for (const customDecorator of customDecorators) {
+        customDecoratorsContent =
+          customDecoratorsContent + customDecorator.generateContent();
+        this.addDecoratorToImport(customDecorator);
+      }
+    }
+
+    let fieldDecoratorsAndCustomDecoratorsContent: string = '';
+    fieldDecoratorsAndCustomDecoratorsContent =
+      fieldDecoratorsContent + customDecoratorsContent;
+
+    content = content.replace(
+      /#{DECORATORS}/g,
+      fieldDecoratorsAndCustomDecoratorsContent,
+    );
 
     return content;
+  }
+
+  private parseDocumentation(field: DMMF.Field): DecoratorHelper[] {
+    let documentation = field.documentation || '';
+
+    documentation = documentation.replace(/(\r\n|\n|\r)/gm, ' ');
+
+    const customDecorators = documentation.split(' ');
+
+    const result: DecoratorHelper[] = [];
+
+    for (const customDecorator of customDecorators) {
+      const decoratorParamsIndex = customDecorator.indexOf('(');
+      const decoratorParams = customDecorator.substring(
+        decoratorParamsIndex + 1,
+        customDecorator.lastIndexOf(')'),
+      );
+
+      let decoratorName = customDecorator.substring(0, decoratorParamsIndex);
+      if (decoratorName.startsWith('@')) {
+        decoratorName = decoratorName.substring(1);
+      }
+
+      const decorator = new DecoratorHelper(
+        decoratorName,
+        this.config.DTOValidatorPackage,
+        decoratorParams,
+      );
+
+      result.push(decorator);
+    }
+
+    return result;
   }
 
   private addDecoratorToImport(decorator: DecoratorHelper) {
