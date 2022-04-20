@@ -8,7 +8,7 @@ import { GeneratorInterface } from './interfaces/generator.interface';
 const { version } = require('../package.json');
 
 const defaultOptions: GeneratorInterface = {
-  useStrict: 'true',
+  useStrict: 'false',
   dryRun: 'false',
 
   schemaPath: '',
