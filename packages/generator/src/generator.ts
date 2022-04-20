@@ -1,11 +1,9 @@
 import { generatorHandler, GeneratorOptions } from '@prisma/generator-helper';
 import { logger } from '@prisma/sdk';
-import path from 'path';
-import { GENERATOR_NAME } from './constants';
+import { DTO_TYPE, GENERATOR_NAME } from './constants';
 import { CrudServiceGenerator } from './generators/crud.service.generator';
 import { DtoGenerator } from './generators/dto.generator';
 import { GeneratorInterface } from './interfaces/generator.interface';
-import { writeFileSafely } from './utils/writeFileSafely';
 
 const { version } = require('../package.json');
 
@@ -16,10 +14,15 @@ const defaultOptions: GeneratorInterface = {
   schemaPath: '',
 
   DTOPath: 'data/dtos',
-  DTOPrefixCreate: 'Create',
-  DTOPrefixUpdate: 'Update',
+  DTOCreatePrefix: 'Create',
+  DTOCreateParentClass: undefined,
+  DTOCreateParentClassPath: undefined,
+
+  DTOUpdatePrefix: 'Update',
+  DTOUpdateParentClass: undefined,
+  DTOUpdateParentClassPath: undefined,
+
   DTOSuffix: 'Dto',
-  DTOParentClass: undefined,
   DTOValidatorPackage: '@nestjs/class-validator',
 
   CRUDServicePath: 'services',
@@ -72,11 +75,37 @@ generatorHandler({
       // ----------------------------------------
 
       // ----------------------------------------
-      // generate DTOs
-      let dtoClassName = `${config.DTOPrefixCreate}${model.name}${config.DTOSuffix}`;
-      const dtoGenerator = new DtoGenerator(config, model, dtoClassName);
-      const dtoContent = await dtoGenerator.generateContent();
-      await dtoGenerator.writeToFile(outputBasePath, dtoContent);
+      // generate CREATE DTOs
+      const dtoCreateClassName = `${config.DTOCreatePrefix}${model.name}${config.DTOSuffix}`;
+      const dtoCreateGenerator = new DtoGenerator(
+        config,
+        model,
+        dtoCreateClassName,
+      );
+      const dtoCreateContent = await dtoCreateGenerator.generateContent(
+        DTO_TYPE.CREATE,
+      );
+      await dtoCreateGenerator.writeToFile(
+        DTO_TYPE.CREATE,
+        outputBasePath,
+        dtoCreateContent,
+      );
+
+      // generate Update DTOs
+      const dtoUpdateClassName = `${config.DTOUpdatePrefix}${model.name}${config.DTOSuffix}`;
+      const dtoUpdateGenerator = new DtoGenerator(
+        config,
+        model,
+        dtoUpdateClassName,
+      );
+      const dtoUpdateContent = await dtoUpdateGenerator.generateContent(
+        DTO_TYPE.UPDATE,
+      );
+      await dtoUpdateGenerator.writeToFile(
+        DTO_TYPE.UPDATE,
+        outputBasePath,
+        dtoUpdateContent,
+      );
       // ----------------------------------------
     }
   },

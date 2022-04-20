@@ -9,6 +9,7 @@ import {
 import { PrismaHelper } from './../helper/prisma.helper';
 import path from 'path';
 import { writeFileSafely } from './../utils/writeFileSafely';
+import { DTO_TYPE } from './../constants';
 
 export class DtoGenerator {
   private fieldDecorators: DecoratorHelper[] = [];
@@ -19,19 +20,48 @@ export class DtoGenerator {
     private className: string,
   ) {}
 
-  public async generateContent() {
+  public async generateContent(dtoType: DTO_TYPE) {
     let content = dtoClassStub;
 
     content = content.replace(/#{NAME}/g, this.className);
 
-    if (this.config.DTOParentClass) {
-      content = content.replace(
-        /#{PARENTCLASS}/g,
-        `extends ${this.config.DTOParentClass}`,
-      );
-    } else {
-      content = content.replace(/#{PARENTCLASS}/g, '');
+    if (dtoType === DTO_TYPE.CREATE) {
+      if (this.config.DTOCreateParentClass) {
+        content = content.replace(
+          /#{PARENTCLASS}/g,
+          `extends ${this.config.DTOCreateParentClass}`,
+        );
+      }
+
+      if (this.config.DTOCreateParentClassPath) {
+        this.addDecoratorToImport(
+          new DecoratorHelper(
+            this.config.DTOCreateParentClass + '',
+            this.config.DTOCreateParentClassPath,
+          ),
+        );
+      }
     }
+
+    if (dtoType === DTO_TYPE.UPDATE) {
+      if (this.config.DTOUpdateParentClass) {
+        content = content.replace(
+          /#{PARENTCLASS}/g,
+          `extends ${this.config.DTOUpdateParentClass}`,
+        );
+      }
+
+      if (this.config.DTOUpdateParentClassPath) {
+        this.addDecoratorToImport(
+          new DecoratorHelper(
+            this.config.DTOUpdateParentClass + '',
+            this.config.DTOUpdateParentClassPath,
+          ),
+        );
+      }
+    }
+
+    content = content.replace(/#{PARENTCLASS}/g, '');
 
     let fieldsContent = '';
 
@@ -47,11 +77,25 @@ export class DtoGenerator {
     return content;
   }
 
-  public async writeToFile(outputBasePath: string, content: string) {
+  public async writeToFile(
+    dtoType: DTO_TYPE,
+    outputBasePath: string,
+    content: string,
+  ) {
+    let fileName = '';
+    if (dtoType === DTO_TYPE.CREATE) {
+      fileName = `${this.config.DTOCreatePrefix.toLowerCase()}`;
+    }
+    if (dtoType === DTO_TYPE.UPDATE) {
+      fileName = `${this.config.DTOUpdatePrefix.toLowerCase()}`;
+    }
+
+    fileName = `${fileName}-${this.model.name.toLowerCase()}.${this.config.DTOSuffix.toLowerCase()}.ts`;
+
     const dtoFilePath = path.join(
       outputBasePath,
       this.config.DTOPath,
-      `${this.config.DTOPrefixCreate.toLowerCase()}-${this.model.name.toLowerCase()}.${this.config.DTOSuffix.toLowerCase()}.ts`,
+      `${fileName}`,
     );
 
     await writeFileSafely(this.config, dtoFilePath, content);

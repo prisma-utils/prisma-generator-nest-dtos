@@ -5,10 +5,15 @@ export interface GeneratorInterface {
   schemaPath: string;
 
   DTOPath: string;
-  DTOPrefixCreate: string;
-  DTOPrefixUpdate: string;
+  DTOCreatePrefix: string;
+  DTOCreateParentClass?: string;
+  DTOCreateParentClassPath?: string;
+
+  DTOUpdatePrefix: string;
+  DTOUpdateParentClass?: string;
+  DTOUpdateParentClassPath?: string;
+
   DTOSuffix: string;
-  DTOParentClass?: string;
   DTOValidatorPackage: string;
 
   CRUDServicePath: string;
